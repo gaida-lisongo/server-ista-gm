@@ -123,10 +123,16 @@ class AppModel extends Model {
     }
 
     async getMatieresByPromotion(promotionId) {
-        const sql = `SELECT mt.*, ut.designation AS 'unite-titre', ut.code AS 'unite-code'
+        const sql = `SELECT mt.id, mt.designation, mt.credit, mt.code, ch.statut, ch.semestre, ut.designation AS 'unite-titre', ut.code AS 'unite-code'
             FROM matiere mt
             INNER JOIN unite ut ON ut.id = mt.id_unite
-            WHERE ut.id_promotion = ?
+            INNER JOIN charge_horaire ch ON ch.id_matiere = mt.id
+            WHERE ut.id_promotion = ? AND ch.id_annee = (
+                SELECT annee.id
+                FROM annee
+                ORDER BY annee.id DESC
+                LIMIT 1
+            ) 
         `;
         const result = await this.request(sql, [promotionId]);
         return result || [];
