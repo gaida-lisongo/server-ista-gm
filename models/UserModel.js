@@ -42,7 +42,7 @@ class UserModel extends AppModel {
             const query = `
                 SELECT * 
                 FROM etudiant
-                WHERE matricule = ? AND mdp = ?
+                WHERE matricule = ? AND secret = ?
             `;
             const {rows, count} = await this.request(query, [data.matricule, data.mdp]);
             
@@ -96,7 +96,7 @@ class UserModel extends AppModel {
         try {
             const query = `
                 UPDATE etudiant 
-                SET mdp = ? 
+                SET secret = ? 
                 WHERE id = ?
             `;
             const result = await this.request(query, [data.mdp, data.etudiantId]);
